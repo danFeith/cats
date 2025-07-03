@@ -1,0 +1,71 @@
+# Node modules (both server and client)
+node_modules/
+**/node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build directories
+dist/          # NestJS build folder
+build/         # React build folder
+server/dist/
+client/build/
+
+# Coverage directories
+coverage/
+.nyc_output/
+
+# Environment variables
+.env
+.env.*.local
+server/.env
+client/.env
+
+# NestJS specific
+server/.cache
+server/*.tsbuildinfo
+
+# React specific
+client/.cache
+client/.next
+client/.parcel-cache
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Optional npm/yarn/pnpm caches
+.npm
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Optional eslint/prettier caches
+.eslintcache
+.prettiercache
+
+# REPL history
+.node_repl_history
+
+# MacOS
+.DS_Store
+
