@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Sidebar } from './components/Sidebar/Sidebar';
+import { CatsListPage } from './pages/CatsListPage/CatsListPage';
+import { CreateCatPage } from './pages/CreateCatPage/CreateCatPage';
+import { useAppStyles } from './styles';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const classes = useAppStyles();
+  const [x, y] = useState(0)
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     y(p => p + 1)
+  //   }, 1000)
+  // }, [])
+
+
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className={classes.container}>
+      <Sidebar />
+      {/* <h1>{x}</h1> */}
+      <div className={classes.content}>
+        <Routes>
+          <Route path="/" element={<CatsListPage />} />
+          <Route path="/create" element={<CreateCatPage />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App;
