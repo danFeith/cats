@@ -1,24 +1,64 @@
-import React from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useCatCardStyles } from './styles';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { useCatsContext } from '../../context/CatContext';
+import { Button } from '../Button';
+import { MiceSection } from '../MiceSection';
 
 interface ICatCardProps {
+    id: number;
     image: string;
     fullName: string;
     description: string;
 }
 
-const CatCard: React.FC<ICatCardProps> = ({ image, fullName, description }) => {
-    const classes = useCatCardStyles();
+const HIDE_MICE_SECTION_BUTTON_TEXT = "Hide Mice"
+const SHOW_MICE_SECTION_BUTTON_TEXT = "Show Mice"
+
+export const CatCard: React.FC<ICatCardProps> = memo(({ id, image, fullName, description }) => {
+    const [showMiceSetion, setShowMiceSection] = useState(false);
+    const { deleteCat } = useCatsContext()
+    const classes = useCatCardStyles({ isMouseCardOpen: showMiceSetion });
+
+    const handleDelete = useCallback(async () => {
+        await deleteCat(id);
+    }, [id]);
+
+    const toggleMiceSection = useCallback(async () => {
+        setShowMiceSection((prev) => !prev);
+    }, []);
+
 
     return (
-        <div className={classes.card}>
-            <img src={image} alt={fullName} className={classes.image} />
-            <div className={classes.details}>
-                <h2 className={classes.name}>{fullName}</h2>
-                <p className={classes.description}>{description}</p>
+        <div className={classes.cardContainer}>
+            <div className={classes.cardBody}>
+                <img src={image} alt={fullName} className={classes.image} />
+                <div className={classes.details}>
+                    <h2 className={classes.name}>{fullName}</h2>
+                    <p className={classes.description}>{description}</p>
+                </div>
+                <div className={classes.actions}>
+                    <Button
+                        className={classes.miceButton}
+                        onClick={toggleMiceSection}
+                    >
+                        {showMiceSetion ? HIDE_MICE_SECTION_BUTTON_TEXT : SHOW_MICE_SECTION_BUTTON_TEXT}
+                        <FontAwesomeIcon
+                            icon={showMiceSetion ? faChevronUp : faChevronDown}
+                            className={classes.chevron}
+                        />
+                    </Button>
+                    <Button
+                        className={classes.deleteButton}
+                        onClick={handleDelete}
+                    >
+                        <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                </div>
             </div>
+            {showMiceSetion && <MiceSection catId={id} />}
         </div>
     );
-};
+});
 
-export default React.memo(CatCard);

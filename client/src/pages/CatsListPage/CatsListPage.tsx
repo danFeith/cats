@@ -1,41 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { memo } from 'react';
 import { useCatsListPageStyles } from './styles';
-import CatCard from '../../components/CatCard/CatCard';
-import { List } from 'immutable';
-import axios from 'axios';
+import { CatCard } from '../../components/CatCard';
+import { useCatsContext } from '../../context/CatContext';
 
-interface ICat {
-    id: number;
-    fullName: string;
-    description: string;
-    image: string;
-}
+const LOADING_MESSAGE = 'Loading cats...'
 
-export const CatsListPage: React.FC = () => {
+export const CatsListPage = memo(() => {
     const classes = useCatsListPageStyles();
-    const [cats, setCats] = useState(List<ICat>());
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-
-
-    useEffect(() => {
-        const fetchCats = async () => {
-            try {
-                const response = await axios.get<ICat[]>('http://localhost:5000/cat');
-                setCats(List(response.data));
-            } catch (err) {
-                setError('Failed to load cats. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchCats();
-    }, []);
+    const { cats, loading, error } = useCatsContext()
 
     if (loading) {
-        return <p className={classes.loading}>Loading cats...</p>;
+        return <p className={classes.loading}>{LOADING_MESSAGE}</p>;
     }
 
     if (error) {
@@ -47,12 +22,13 @@ export const CatsListPage: React.FC = () => {
             {cats.map((cat) => (
                 <CatCard
                     key={cat.id}
+                    id={cat.id}
                     image={cat.image}
-                    fullName={cat.fullName}
+                    fullName={`${cat.firstName} ${cat.lastName}`}
                     description={cat.description}
                 />
             ))}
         </div>
     );
-};
+});
 

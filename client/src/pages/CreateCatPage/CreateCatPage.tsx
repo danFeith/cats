@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
-import axios from 'axios';
 import { useCreateCatPageStyles } from './styles';
+import { useCatsContext } from '../../context/CatContext';
+import { Button } from '../../components/Button';
 
 export const CreateCatPage = memo(() => {
     const classes = useCreateCatPageStyles();
@@ -9,30 +10,34 @@ export const CreateCatPage = memo(() => {
     const [lastName, setLastName] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
-    const [loading, setLoading] = useState(false);
+
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const { createCat, loading, fetchRandomCatImage, randomImageLoading } = useCatsContext();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
         setSuccessMessage('');
         setErrorMessage('');
 
         try {
-            await axios.post('http://localhost:5000/cat', {
-                firstName,
-                lastName,
-                description,
-                image,
-            });
+            await createCat({ firstName, lastName, description, image });
             setSuccessMessage('Cat created successfully!');
-            clearForm()
+            clearForm();
         } catch (error) {
             console.error('Error creating cat:', error);
             setErrorMessage('Failed to create cat. Please try again.');
-        } finally {
-            setLoading(false);
+        }
+    };
+
+    const handleGetRandomImage = async () => {
+        setErrorMessage('');
+        try {
+            const randomImageUrl = await fetchRandomCatImage();
+            setImage(randomImageUrl);
+        } catch (error) {
+            console.error('Error fetching random image:', error);
+            setErrorMessage('Could not fetch random image. Try again.');
         }
     };
 
@@ -41,12 +46,7 @@ export const CreateCatPage = memo(() => {
         setLastName('');
         setDescription('');
         setImage('');
-    }
-    const onFirstNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)
-    const onLastNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)
-    const onDescriptionInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)
-    const onImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.value)
-
+    };
 
     return (
         <div className={classes.container}>
@@ -57,7 +57,7 @@ export const CreateCatPage = memo(() => {
                     <input
                         type="text"
                         value={firstName}
-                        onChange={onFirstNameInputChange}
+                        onChange={(e) => setFirstName(e.target.value)}
                         className={classes.input}
                         required
                     />
@@ -68,7 +68,7 @@ export const CreateCatPage = memo(() => {
                     <input
                         type="text"
                         value={lastName}
-                        onChange={onLastNameInputChange}
+                        onChange={(e) => setLastName(e.target.value)}
                         className={classes.input}
                         required
                     />
@@ -78,7 +78,7 @@ export const CreateCatPage = memo(() => {
                     Description:
                     <textarea
                         value={description}
-                        onChange={onDescriptionInputChange}
+                        onChange={(e) => setDescription(e.target.value)}
                         className={classes.textarea}
                         required
                     />
@@ -89,19 +89,37 @@ export const CreateCatPage = memo(() => {
                     <input
                         type="url"
                         value={image}
-                        onChange={onImageInputChange}
+                        onChange={(e) => setImage(e.target.value)}
                         className={classes.input}
                         required
                     />
+                    <Button
+                        type="button"
+                        onClick={handleGetRandomImage}
+                        className={classes.secondaryButton}
+                        disabled={randomImageLoading}
+                    >
+                        {randomImageLoading ? 'Fetching...' : 'Get Random Cat Image'}
+                    </Button>
                 </label>
 
-                <button
+                {image && (
+                    <div className={classes.preview}>
+                        <img
+                            src={image}
+                            alt="Cat Preview"
+                            className={classes.imagePreview}
+                        />
+                    </div>
+                )}
+
+                <Button
                     type="submit"
                     className={classes.button}
                     disabled={loading}
                 >
                     {loading ? 'Creating...' : 'Create Cat'}
-                </button>
+                </Button>
 
                 {successMessage && (
                     <p className={classes.success}>{successMessage}</p>
@@ -113,4 +131,3 @@ export const CreateCatPage = memo(() => {
         </div>
     );
 });
-

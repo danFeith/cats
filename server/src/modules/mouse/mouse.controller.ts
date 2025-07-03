@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { MouseService } from './mouse.service';
-import { CreateMouseDTO, serializeMouse } from '../../models/mouse/mouse.serializer';
+import { serializeMouse } from '../../models/mouse/mouse.serializer';
+import { CreateMouseSchema } from './mouse.schema';
 
 @Controller('mouse')
 export class MouseController {
@@ -12,8 +13,8 @@ export class MouseController {
   }
 
   @Post()
-  async createMouse(@Body() dto: CreateMouseDTO) {
-    return (await this.mouseService.create(dto))
+  async createMouse(@Body() mouseDetails: CreateMouseSchema) {
+    return (await this.mouseService.create(mouseDetails))
   }
 
 }

@@ -1,15 +1,9 @@
 import { CatModel } from './cat.model';
 
-export interface CreateCatDTO {
-    firstName: string;
-    lastName: string;
-    description?: string;
-    image?: string;
-}
-
 export interface ISerializedCat {
     id: number;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     description?: string;
     image?: string;
     mouses?: ISerializedMouse[];
@@ -22,7 +16,8 @@ interface ISerializedMouse {
 
 export const serializeCat = (cat: CatModel): ISerializedCat => ({
     id: cat.id,
-    fullName: `${cat.firstName} ${cat.lastName}`,
+    firstName: cat.firstName,
+    lastName: cat.lastName,
     description: cat.description,
     image: cat.image,
     mouses: cat.mouses?.map(mouse => ({

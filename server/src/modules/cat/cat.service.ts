@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CatModel } from '../../models/cat/cat.model';
-import { CreateCatDTO } from '../../models/cat/cat.serializer';
 import { MouseModel } from 'src/models/mouse/mouse.model';
+import { CreateCatSchema } from './cat.schema';
 
 @Injectable()
 export class CatService {
@@ -15,12 +15,18 @@ export class CatService {
         return (await this.catModel.findAll({ include: [MouseModel], order: [['id', 'ASC']] }))
     }
 
-    async create(dto: CreateCatDTO): Promise<CatModel> {
+    async create(cat: CreateCatSchema): Promise<CatModel> {
         return await this.catModel.create<CatModel>({
-            firstName: dto.firstName,
-            lastName: dto.lastName,
-            description: dto.description,
-            image: dto.image
+            firstName: cat.firstName,
+            lastName: cat.lastName,
+            description: cat.description,
+            image: cat.image
         })
+    }
+
+    async delete(catId: number) {
+        const catToDelete = await this.catModel.findOne({ where: { id: catId } })
+        if (!catToDelete) throw new NotFoundException('Cat not found');
+        await catToDelete.destroy()
     }
 }

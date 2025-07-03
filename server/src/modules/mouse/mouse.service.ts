@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { MouseModel } from 'src/models/mouse/mouse.model';
-import { CreateMouseDTO } from 'src/models/mouse/mouse.serializer';
+import { CreateMouseSchema } from './mouse.schema';
 
 @Injectable()
 export class MouseService {
@@ -14,10 +14,10 @@ export class MouseService {
         return await this.mouseModel.findAll({ where: { catId } })
     }
 
-    async create(dto: CreateMouseDTO) {
+    async create(mouseDetails: CreateMouseSchema) {
         return await this.mouseModel.create<MouseModel>({
-            name: dto.name,
-            catId: dto.catId
+            name: mouseDetails.name,
+            catId: mouseDetails.catId
         })
     }
 }

@@ -1,10 +1,5 @@
 import { MouseModel } from './mouse.model';
 
-export interface CreateMouseDTO {
-    name: string;
-    catId: number;
-}
-
 export interface ISerializedMouse {
     id: number;
     name: string;
