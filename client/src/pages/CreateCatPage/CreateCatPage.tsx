@@ -1,18 +1,17 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useCreateCatPageStyles } from './styles';
 import { useCatsContext } from '../../context/CatContext';
 import { Button } from '../../components/Button';
 import { ImagePreview } from '../../components/ImagePreview';
 import { FeedbackMessage } from '../../components/FeedbackMessage/FeedbackMessage';
 
-export const CreateCatPage = memo(() => {
+export const CreateCatPage = () => {
     const classes = useCreateCatPageStyles();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
-
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const { createCat, loading, fetchRandomCatImage, randomImageLoading } = useCatsContext();
@@ -49,7 +48,7 @@ export const CreateCatPage = memo(() => {
             console.error('Error creating cat:', error);
             setErrorMessage('Failed to create cat. Please try again.');
         }
-    }, [createCat, clearForm]);
+    }, [createCat, clearForm, firstName, lastName, description, image]);
 
     return (
         <div className={classes.container}>
@@ -120,4 +119,4 @@ export const CreateCatPage = memo(() => {
             </form>
         </div>
     );
-});
+};

@@ -20,8 +20,4 @@ export const serializeCat = (cat: CatModel): ISerializedCat => ({
     lastName: cat.lastName,
     description: cat.description,
     image: cat.image,
-    mouses: cat.mouses?.map(mouse => ({
-        id: mouse.id,
-        name: mouse.name,
-    })),
 });

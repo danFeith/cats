@@ -24,6 +24,7 @@ const useCatsState = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [miceLoading, setMiceLoading] = useState<boolean>(false);
     const [randomImageLoading, setRandomImageLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState<string>('')
 
     const [error, setError] = useState<string | null>(null);
 
@@ -31,14 +32,16 @@ const useCatsState = () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get<ICat[]>(`${SERVER_URL}/cat`);
+            const currentSearchQuery = searchQuery?.trim()
+            const response = await axios.get<ICat[]>(`${SERVER_URL}/cat${currentSearchQuery ? `/search?query=${currentSearchQuery}` : ``}`)
+
             setCats(List(response.data));
         } catch (err) {
             setError('Failed to load cats. Please try again later.');
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [searchQuery]);
 
     const createCat = useCallback(async (catDetails: Omit<ICat, 'id'>) => {
         const { firstName, lastName, description, image } = catDetails
@@ -58,7 +61,7 @@ const useCatsState = () => {
         await axios.delete(`${SERVER_URL}/cat/${catId}`);
         await fetchCats()
         setLoading(false)
-    }, [fetchCats])
+    }, [fetchCats, searchQuery])
 
     const getCatsMice = useCallback(async (catId: number) => {
         setMiceLoading(true)
@@ -95,7 +98,7 @@ const useCatsState = () => {
 
     useEffect(() => {
         fetchCats();
-    }, []);
+    }, [searchQuery]);
 
     const catCapabilities = useMemo(() => ({
         cats,
@@ -108,7 +111,8 @@ const useCatsState = () => {
         fetchRandomCatImage,
         randomImageLoading,
         getCatsMice,
-        addMouseToCat
+        addMouseToCat,
+        setSearchQuery
     }), [
         cats,
         loading,
