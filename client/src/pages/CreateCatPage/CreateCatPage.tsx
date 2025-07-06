@@ -1,7 +1,9 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { useCreateCatPageStyles } from './styles';
 import { useCatsContext } from '../../context/CatContext';
 import { Button } from '../../components/Button';
+import { ImagePreview } from '../../components/ImagePreview';
+import { FeedbackMessage } from '../../components/FeedbackMessage/FeedbackMessage';
 
 export const CreateCatPage = memo(() => {
     const classes = useCreateCatPageStyles();
@@ -15,7 +17,26 @@ export const CreateCatPage = memo(() => {
     const [errorMessage, setErrorMessage] = useState('');
     const { createCat, loading, fetchRandomCatImage, randomImageLoading } = useCatsContext();
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const clearForm = useCallback(() => {
+        setFirstName('');
+        setLastName('');
+        setDescription('');
+        setImage('');
+    }, []);
+
+    const handleGetRandomImage = useCallback(async () => {
+        setErrorMessage('');
+        try {
+            const randomImageUrl = await fetchRandomCatImage();
+            setImage(randomImageUrl);
+        } catch (error) {
+            console.error('Error fetching random image:', error);
+            setErrorMessage('Could not fetch random image. Try again.');
+        }
+    }, [fetchRandomCatImage]);
+
+
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         setSuccessMessage('');
         setErrorMessage('');
@@ -28,25 +49,7 @@ export const CreateCatPage = memo(() => {
             console.error('Error creating cat:', error);
             setErrorMessage('Failed to create cat. Please try again.');
         }
-    };
-
-    const handleGetRandomImage = async () => {
-        setErrorMessage('');
-        try {
-            const randomImageUrl = await fetchRandomCatImage();
-            setImage(randomImageUrl);
-        } catch (error) {
-            console.error('Error fetching random image:', error);
-            setErrorMessage('Could not fetch random image. Try again.');
-        }
-    };
-
-    const clearForm = () => {
-        setFirstName('');
-        setLastName('');
-        setDescription('');
-        setImage('');
-    };
+    }, [createCat, clearForm]);
 
     return (
         <div className={classes.container}>
@@ -103,15 +106,7 @@ export const CreateCatPage = memo(() => {
                     </Button>
                 </label>
 
-                {image && (
-                    <div className={classes.preview}>
-                        <img
-                            src={image}
-                            alt="Cat Preview"
-                            className={classes.imagePreview}
-                        />
-                    </div>
-                )}
+                {image && <ImagePreview src={image} />}
 
                 <Button
                     type="submit"
@@ -121,12 +116,7 @@ export const CreateCatPage = memo(() => {
                     {loading ? 'Creating...' : 'Create Cat'}
                 </Button>
 
-                {successMessage && (
-                    <p className={classes.success}>{successMessage}</p>
-                )}
-                {errorMessage && (
-                    <p className={classes.error}>{errorMessage}</p>
-                )}
+                <FeedbackMessage error={errorMessage} success={successMessage} />
             </form>
         </div>
     );

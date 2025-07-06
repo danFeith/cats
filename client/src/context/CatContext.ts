@@ -4,6 +4,7 @@ import { List } from "immutable";
 import axios from "axios";
 
 const SERVER_URL = "http://localhost:5000"
+const RANDOM_CAT_API_URL = 'https://api.thecatapi.com'
 
 export interface ICat {
     id: number;
@@ -78,7 +79,7 @@ const useCatsState = () => {
     const fetchRandomCatImage = useCallback(async () => {
         setRandomImageLoading(true);
         try {
-            const res = await axios.get('https://api.thecatapi.com/v1/images/search?limit=1');
+            const res = await axios.get(`${RANDOM_CAT_API_URL}/v1/images/search?limit=1`);
             if (res.data.length > 0 && res.data[0]?.url) {
                 return res.data[0].url;
             } else {
@@ -108,7 +109,13 @@ const useCatsState = () => {
         randomImageLoading,
         getCatsMice,
         addMouseToCat
-    }), [cats])
+    }), [
+        cats,
+        loading,
+        miceLoading,
+        error,
+        randomImageLoading
+    ])
 
     return catCapabilities
 }

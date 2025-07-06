@@ -1,13 +1,12 @@
-import { memo } from 'react';
 import { useCatsListPageStyles } from './styles';
 import { CatCard } from '../../components/CatCard';
 import { useCatsContext } from '../../context/CatContext';
 
 const LOADING_MESSAGE = 'Loading cats...'
 
-export const CatsListPage = memo(() => {
+export const CatsListPage = () => {
     const classes = useCatsListPageStyles();
-    const { cats, loading, error } = useCatsContext()
+    const { cats, loading, error, deleteCat } = useCatsContext()
 
     if (loading) {
         return <p className={classes.loading}>{LOADING_MESSAGE}</p>;
@@ -26,9 +25,10 @@ export const CatsListPage = memo(() => {
                     image={cat.image}
                     fullName={`${cat.firstName} ${cat.lastName}`}
                     description={cat.description}
+                    onDeleteCat={deleteCat}
                 />
             ))}
         </div>
     );
-});
+};
 

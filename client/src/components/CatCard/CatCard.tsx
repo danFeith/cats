@@ -2,7 +2,6 @@ import React, { memo, useCallback, useState } from 'react';
 import { useCatCardStyles } from './styles';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { useCatsContext } from '../../context/CatContext';
 import { Button } from '../Button';
 import { MiceSection } from '../MiceSection';
 
@@ -11,21 +10,21 @@ interface ICatCardProps {
     image: string;
     fullName: string;
     description: string;
+    onDeleteCat: (id: number) => void;
 }
 
 const HIDE_MICE_SECTION_BUTTON_TEXT = "Hide Mice"
 const SHOW_MICE_SECTION_BUTTON_TEXT = "Show Mice"
 
-export const CatCard: React.FC<ICatCardProps> = memo(({ id, image, fullName, description }) => {
+export const CatCard: React.FC<ICatCardProps> = memo(({ id, image, fullName, description, onDeleteCat }) => {
     const [showMiceSetion, setShowMiceSection] = useState(false);
-    const { deleteCat } = useCatsContext()
     const classes = useCatCardStyles({ isMouseCardOpen: showMiceSetion });
 
     const handleDelete = useCallback(async () => {
-        await deleteCat(id);
-    }, [id]);
+        await onDeleteCat(id);
+    }, [id, onDeleteCat]);
 
-    const toggleMiceSection = useCallback(async () => {
+    const toggleMiceSection = useCallback(() => {
         setShowMiceSection((prev) => !prev);
     }, []);
 
