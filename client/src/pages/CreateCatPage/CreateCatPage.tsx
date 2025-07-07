@@ -4,6 +4,7 @@ import { useCatsContext } from '../../context/CatContext';
 import { Button } from '../../components/Button';
 import { ImagePreview } from '../../components/ImagePreview';
 import { FeedbackMessage } from '../../components/FeedbackMessage/FeedbackMessage';
+import { InputField } from '../../components/InputField';
 
 export const CreateCatPage = () => {
     const classes = useCreateCatPageStyles();
@@ -54,56 +55,50 @@ export const CreateCatPage = () => {
         <div className={classes.container}>
             <h1 className={classes.title}>Create New Cat</h1>
             <form onSubmit={handleSubmit} className={classes.form}>
-                <label className={classes.label}>
-                    First Name:
-                    <input
-                        type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        className={classes.input}
-                        required
-                    />
-                </label>
+                <InputField
+                    label="First Name:"
+                    value={firstName}
+                    onChange={setFirstName}
+                    placeholder="Enter first name"
+                    required
+                    className={classes.input}
+                />
 
-                <label className={classes.label}>
-                    Last Name:
-                    <input
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        className={classes.input}
-                        required
-                    />
-                </label>
+                <InputField
+                    label="Last Name:"
+                    value={lastName}
+                    onChange={setLastName}
+                    placeholder="Enter last name"
+                    required
+                    className={classes.input}
+                />
 
-                <label className={classes.label}>
-                    Description:
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className={classes.textarea}
-                        required
-                    />
-                </label>
+                <InputField
+                    label="Description:"
+                    value={description}
+                    onChange={setDescription}
+                    placeholder="Enter description"
+                    required
+                    className={classes.input}
+                />
 
-                <label className={classes.label}>
-                    Image URL:
-                    <input
-                        type="url"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
-                        className={classes.input}
-                        required
-                    />
-                    <Button
-                        type="button"
-                        onClick={handleGetRandomImage}
-                        className={classes.secondaryButton}
-                        disabled={randomImageLoading}
-                    >
-                        {randomImageLoading ? 'Fetching...' : 'Get Random Cat Image'}
-                    </Button>
-                </label>
+                <InputField
+                    label="Image URL:"
+                    value={image}
+                    onChange={setImage}
+                    type="url"
+                    placeholder="Paste image URL"
+                    required
+                    className={classes.input}
+                />
+                <Button
+                    type="button"
+                    onClick={handleGetRandomImage}
+                    className={classes.secondaryButton}
+                    disabled={randomImageLoading}
+                >
+                    {randomImageLoading ? 'Fetching...' : 'Get Random Cat Image'}
+                </Button>
 
                 {image && <ImagePreview src={image} />}
 

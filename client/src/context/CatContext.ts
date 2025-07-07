@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import constate from "constate";
 import { List } from "immutable";
 import axios from "axios";
@@ -33,7 +33,7 @@ const useCatsState = () => {
         setError(null);
         try {
             const currentSearchQuery = searchQuery?.trim()
-            const response = await axios.get<ICat[]>(`${SERVER_URL}/cat${currentSearchQuery ? `/search?query=${currentSearchQuery}` : ``}`)
+            const response = await axios.get<ICat[]>(`${SERVER_URL}/cat${currentSearchQuery ? `/search?query=${currentSearchQuery}` : `/all`}`)
 
             setCats(List(response.data));
         } catch (err) {
@@ -96,6 +96,8 @@ const useCatsState = () => {
         }
     }, []);
 
+    const isSearchActice = useMemo(() => !!searchQuery.trim(), [searchQuery])
+
     useEffect(() => {
         fetchCats();
     }, [searchQuery]);
@@ -112,13 +114,15 @@ const useCatsState = () => {
         randomImageLoading,
         getCatsMice,
         addMouseToCat,
-        setSearchQuery
+        setSearchQuery,
+        isSearchActice
     }), [
         cats,
         loading,
         miceLoading,
         error,
-        randomImageLoading
+        randomImageLoading,
+        isSearchActice
     ])
 
     return catCapabilities

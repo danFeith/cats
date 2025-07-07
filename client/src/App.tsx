@@ -8,13 +8,6 @@ import { CatsProvider } from './context/CatContext';
 
 const App: React.FC = () => {
   const classes = useAppStyles();
-  const [x, y] = useState(0)
-
-  useEffect(() => {
-    setInterval(() => {
-      y(prev => prev + 1)
-    }, 1000)
-  }, [])
 
   return (
     <CatsProvider>

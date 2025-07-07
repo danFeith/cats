@@ -10,7 +10,6 @@ interface SearchBarProps {
 }
 
 export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch }) => {
-    console.log("SearchBar")
     const classes = useSearchBarStyles();
     const debouncedSearch = useDebouncedCallback(onSearch, DEBOUNCE_DELAY);
 

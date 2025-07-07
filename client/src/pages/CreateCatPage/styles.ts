@@ -29,13 +29,6 @@ export const useCreateCatPageStyles = createUseStyles({
         border: '1px solid #ccc',
         marginTop: 4,
     },
-    textarea: {
-        padding: 8,
-        borderRadius: 4,
-        border: '1px solid #ccc',
-        marginTop: 4,
-        resize: 'vertical',
-    },
     button: {
         padding: '10px 16px',
         borderRadius: 4,

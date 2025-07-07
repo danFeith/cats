@@ -37,7 +37,6 @@ export class CatService {
             include: [
                 {
                     model: MouseModel,
-                    required: false,
                 },
             ],
             where: {

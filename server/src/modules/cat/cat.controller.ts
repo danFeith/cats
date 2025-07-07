@@ -12,7 +12,7 @@ export class CatController {
     return (await this.catService.searchByName(query)).map(serializeCat);
   }
 
-  @Get()
+  @Get('/all')
   async findAll() {
     return (await this.catService.findAll()).map(serializeCat);
   }

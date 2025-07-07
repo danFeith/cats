@@ -1,8 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useSidebarStyles } from './styles';
-import { memo } from 'react';
+import React from 'react';
 
-export const Sidebar = memo(() => {
+export const Sidebar = React.memo(() => {
     const classes = useSidebarStyles();
     const location = useLocation();
     return (

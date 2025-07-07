@@ -7,7 +7,7 @@ const LOADING_MESSAGE = 'Loading cats...'
 
 export const CatsListPage = () => {
     const classes = useCatsListPageStyles();
-    const { cats, loading, error, deleteCat, setSearchQuery } = useCatsContext();
+    const { cats, loading, error, deleteCat, isSearchActice, setSearchQuery } = useCatsContext();
 
     return (
         <div className={classes.container}>
@@ -22,6 +22,7 @@ export const CatsListPage = () => {
                     fullName={`${cat.firstName} ${cat.lastName}`}
                     description={cat.description}
                     onDeleteCat={deleteCat}
+                    isSearchActive={isSearchActice}
                 />
             ))}
         </div>
